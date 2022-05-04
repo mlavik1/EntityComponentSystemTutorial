@@ -7,17 +7,27 @@ public interface IComponentData
 }
 
 /// <summary>
-/// System for dealing with entities and components.
+/// System for dealing with entities and components. Entities are basically just integers, and components are structs inheriting from IComponentData.
 /// This is a very naive implementation, used as an example of how ECS should not be implemented.
+/// All components are stored in their own lists, where the index is equal to the entity ID.
+/// All these lists have the same size, which is equal to the maximum entity count, which could result in very high memory usage!
 /// </summary>
 public class EntityComponentSystem
 {
-    private class ComponentArrayBase { }
+    private interface ComponentArrayBase
+    {
+        void OnEntityRemoved(int entity);
+    }
 
     private class ComponentArray<T> : ComponentArrayBase
      where T : struct, IComponentData
     {
         public List<T> components = null;
+
+        public virtual void OnEntityRemoved(int entity)
+        {
+            components[entity] = default(T);
+        }
     }
 
     private int maxEntities;
@@ -53,6 +63,9 @@ public class EntityComponentSystem
     public void RemoveEntity(int entity)
     {
         availableEntities.Enqueue(entity);
+
+        foreach (var compPair in componentArrays)
+            compPair.Value.OnEntityRemoved(entity);
     }
 
     public void SetComponent<T>(int entity, T comp) where T : struct, IComponentData
