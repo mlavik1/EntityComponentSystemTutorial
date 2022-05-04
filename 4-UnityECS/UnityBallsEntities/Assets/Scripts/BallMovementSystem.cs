@@ -39,7 +39,7 @@ public partial class BallMovementSystem : SystemBase
         float deltaTime = Time.DeltaTime;
 
         // Iterate over all entities that have Translation and BallData, with a Burst-compiled lambda (all code below will be compiled with Burst).
-        Entities.WithName("BallMovement").WithBurst().ForEach((ref Translation trans, ref BallData boidData) =>
+        Entities.WithBurst().ForEach((ref Translation trans, ref BallData boidData) =>
         {
             // Box extents
             float boxMin = -boxExtents / 2;

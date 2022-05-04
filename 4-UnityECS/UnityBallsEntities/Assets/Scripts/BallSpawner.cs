@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using Random = UnityEngine.Random;
 using UnityEngine.Rendering;
 
-public class EntityInit : MonoBehaviour
+public class BallSpawner : MonoBehaviour
 {
     public GameObject ballPrefab;
     public int ballCount = 64;
