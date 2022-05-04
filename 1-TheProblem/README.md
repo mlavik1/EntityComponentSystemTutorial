@@ -1,6 +1,6 @@
 # UnityBalls sample
 
-Simulates the movement of a number of balls inside of a box.
+This example project the movement of a number of balls inside of a box.
 The bals have a random position, speed and direction, and will bounce off the walls.
 
 ## How to run the project
@@ -10,6 +10,17 @@ The project was made with Unity 2020.3.33f1, but other versions should work as w
 Simply open the SampleScene and click play.
 
 You can change the ball count in the BallManager game object.
+
+## How it works
+
+The `BallManager` script is responsible for spawning and updating the balls.
+
+On start we spawn a number of ball instances, based on a ball prefab.
+Each ball has a random direction and speed, stored in the `Ball` script.
+
+On update we iterate over the list of balls, and update their positions like this: `position = position + direction * speed * deltaTime`.
+
+To make the balls bounce off the walls of the box, we flip the x,y,z coordinates when they exceed the box bounds.
 
 ## Performance issues
 
