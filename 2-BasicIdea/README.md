@@ -35,3 +35,10 @@ In C# `struct` is a value type, and in an array of `struct` the memory will ther
 On the other hand `class` is a reference type, which is basically a pointer to memory stored elsewhere.
 An array of class is therefore an array of pointers, and when iterating over it we won't be reading the data linearly.
 See [this article](https://www.jacksondunstan.com/articles/3399) for a nice comparison!
+
+## What's next?
+So we have managed to implement a more efficient and cache friendly way of updating a list of moving objects. Isn't that good enough?
+In our simple case: yes, it might be. But in a more complex project (such as in a game engine) we might want to have many entities with different components.
+For example, all our entities might have a position, but only some of them are balls. Others might have other properties and data.
+We could create separate entity lists and systems for each type of entity, but then we wouldn't be able to make systems that access/modify all entities that have a specific component (such as position).
+So we need a slightly more advanced system for this: An Entity Component System! 
