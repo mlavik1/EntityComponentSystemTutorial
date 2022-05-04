@@ -56,3 +56,20 @@ In Unity you can use `Entities.ForEach` to do this, and with the Burst compiler 
 Another problem that we want to avoid is having too large component lists.
 This can cause [memory fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing)) issues, so we want to segment the component lists into smaller chunks.
 This also happens to be what Unity does in it's ECS implementation.
+
+This would introduce a new and improved ECS interface, which could be used like this:
+```csharp
+Archetype archetype = new Archetype(typeof(PositionData), typeof(BallData)):
+List<Entity> entities = ecs.CreateEntities(archetype);
+
+foreach (Entity entity in entities)
+{
+    ecs.SetComponent(entity, new PositionData(...));
+    ecs.SetComponent(entity, new BallData(...));
+}
+
+ecs.ForEach((ref PositionData position, ref BallData ballData) =>
+{
+    position.position += ballData.direction * ballData.speed * deltaTime;
+}
+```

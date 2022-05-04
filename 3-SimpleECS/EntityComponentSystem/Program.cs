@@ -2,7 +2,7 @@
 
 class Program
 {
-    public struct PositionComp : IComponentData
+    public struct PositionData : IComponentData
     {
         public Vector3 position;
     }
@@ -25,7 +25,7 @@ class Program
         // Set components
         foreach (int entity in entities)
         {
-            entitySystem.SetComponent<PositionComp>(entity, new PositionComp(){ position = new Vector3(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()) * 2.0f - Vector3.One });
+            entitySystem.SetComponent<PositionData>(entity, new PositionData(){ position = new Vector3(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()) * 2.0f - Vector3.One });
             entitySystem.SetComponent<BallData>(entity, new BallData(){ speed = rand.NextSingle() * 40.0f + 10.0f });
         }
 
@@ -34,10 +34,10 @@ class Program
         // Iterate over all entities and update their positions
         foreach (int entity in entities)
         {
-            PositionComp position = entitySystem.GetComponent<PositionComp>(entity);
+            PositionData position = entitySystem.GetComponent<PositionData>(entity);
             BallData ballData = entitySystem.GetComponent<BallData>(entity);
             position.position += ballData.direction * ballData.speed * deltaTime;
-            entitySystem.SetComponent<PositionComp>(entity, position);
+            entitySystem.SetComponent<PositionData>(entity, position);
         }
     }
 }
