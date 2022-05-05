@@ -114,7 +114,7 @@ After all, we don't want the user to keep track of all the entity IDs themselves
 
 Another problem that we want to avoid is having too large component lists.
 This can cause [memory fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing)) issues, so we want to segment the component lists into smaller chunks.
-This also happens to be what Unity does in it's ECS implementation.
+[This also happens to be what Unity does in it's ECS implementation](https://docs.unity3d.com/Packages/com.unity.entities@0.4/api/Unity.Entities.ArchetypeChunk.html).
 
 This would introduce a new and improved ECS interface, which could be used like this:
 ```csharp

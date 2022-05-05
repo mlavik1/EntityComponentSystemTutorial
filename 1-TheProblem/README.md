@@ -25,9 +25,14 @@ To make the balls bounce off the walls of the box, we flip the x,y,z coordinates
 ## Performance issues
 
 - We iterate over a list of Ball components to update the balls.
-These are basically pointers to data stored elsewhere in memory, which results in poor cache efficiency.
+These are basically pointers to data stored elsewhere in memory, which results in poor [cache](https://en.wikipedia.org/wiki/CPU_cache) efficiency.
 When updating the positions of the balls we modify `Ball.transform` which also is a reference to data stored another place in memory.
 - We block the main thread while updating the balls (would be nice to do this async!).
 - We use 3 if-checks in the code for making the balls bounce off the walls.
 This can in fact be vectorized optimised with [SIDM](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data) operations.
 See the 4th sample project for how to do this.
+
+## Possible solution
+
+We need to store our data continuously in memory, and make sure that we access it linearly as much as possible.
+This happens to be the basic concept of Entity Component Systems.

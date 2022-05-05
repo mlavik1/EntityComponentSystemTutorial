@@ -1,6 +1,7 @@
 # Basic idea of ECS: Data Oriented Balls
 
 Here I show the basic idea of ECS, which is separating the data from the logic, and storing and accessing the data linearly - to improve cache efficiency.
+Instead of lists of class references we now use lists of continuously allocated data.
 
 ## How to run the project
 
