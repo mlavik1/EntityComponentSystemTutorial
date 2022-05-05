@@ -20,7 +20,7 @@ After creating the entities (which are basically just IDs) we then set the compo
 
 The `BallMovementSystem` is responsible for updating the positions of the balls.
 And before you start searching for references to this script: you won't find any.
-Any script that inherits from `IComponentData` will automatically be initialised and start running once the game starts. In other words: it's magic.
+Any script that inherits from `SystemBase` will automatically be initialised and start running once the game starts. In other words: it's magic.
 
 We use `Entities.WithBurst().ForEach` to update the ball entities.
 This function takes a lambda that will be executed once per entity.
