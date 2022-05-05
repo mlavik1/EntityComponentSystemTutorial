@@ -26,7 +26,7 @@ class Program
         foreach (int entity in entities)
         {
             entitySystem.SetComponent<PositionData>(entity, new PositionData(){ position = new Vector3(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()) * 2.0f - Vector3.One });
-            entitySystem.SetComponent<BallData>(entity, new BallData(){ speed = rand.NextSingle() * 40.0f + 10.0f });
+            entitySystem.SetComponent<BallData>(entity, new BallData(){ speed = rand.NextSingle() * 40.0f + 10.0f, direction = Vector3.Normalize(new Vector3(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()) * 2.0f - Vector3.One) });
         }
 
         const float deltaTime = 0.1f; // example
