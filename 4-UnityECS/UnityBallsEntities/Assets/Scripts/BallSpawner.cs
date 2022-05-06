@@ -21,13 +21,13 @@ public class BallSpawner : MonoBehaviour
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
         // Create ball archetype. This is basically a list of all components we want it to have.
-        EntityArchetype boidArchetype = entityManager.CreateArchetype(
+        EntityArchetype ballArchetype = entityManager.CreateArchetype(
             typeof(LocalToWorld),
             typeof(Translation),
             typeof(BallData));
 
         // Create temporary entity prefab, form which we will instantiate all other entities
-        Entity entityPrefab = entityManager.CreateEntity(boidArchetype);
+        Entity entityPrefab = entityManager.CreateEntity(ballArchetype);
 
         // The hybrid renderer requires a set of components to render a mesh. Add these components, and set the mesh and material.
         var renderDesc = new RenderMeshDescription(

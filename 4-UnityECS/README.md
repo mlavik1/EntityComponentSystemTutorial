@@ -2,7 +2,86 @@
 
 In this project I've modified the original "UnityBalls" sample project to use Unity's Entity Component System.
 
-## Creating the entities
+## Creating and initialising entities in Unity
+
+Creating entities and setting the component data is quite simple. Here's an example:
+
+```csharp
+EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+// Create ball archetype. This is basically a list of all components we want it to have.
+EntityArchetype ballArchetype = entityManager.CreateArchetype(
+    typeof(Translation),
+    typeof(BallData));
+
+// Instantiate entities.
+NativeArray<Entity> entities = new NativeArray<Entity>(ballCount, Allocator.TempJob);
+entityManager.CreateEntity(ballArchetype, entities);
+
+// Set the components of all spawned entities.
+foreach (Entity entity in entities)
+{
+    // Set custom ball data (speed and direction)
+    entityManager.SetComponentData(entity, new BallData
+    {
+        direction = math.normalize(new float3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f))),
+        speed = Random.Range(10.0f, 50.0f)
+    });
+
+    // Set position
+    Translation translation = new Translation();
+    translation.Value = new float3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * SimulationSettings.BoxExtents;
+    entityManager.SetComponentData(entity, translation);
+}
+```
+
+Notice how similar this is to the ECS API we have been discussing up until now?
+
+We first call `CreateArchetype` to create an archetype for our ball entities, and specify that we want them to have `BallData` and `Translation` components.
+
+We then call `CreateEntity` to create the entities, and pass it the number of entities we want and a reference to our entity array.
+
+We then iterate through all the entities, and call `SetComponentData` to set the actual component data. This is not the most efficient way to set the data though.
+There are several ways to update a set of entities, such as `Entities.ForEach`. I will come back to this soon.
+
+## What about the mesh data?
+
+To use the EntityComponentSystem with the Unified Render Pipeline, we need to use the [Hybrid Renderer](https://docs.unity3d.com/Packages/com.unity.rendering.hybrid@latest/). This project is set up to use that already.
+
+The hybrid renderer requires the entities to have a number of rendering-related component for it to render them. Luckily we don't have to create them manually.
+All we need to do is to create a `RenderMeshDescription` and then pass it to the `RenderMeshUtility.AddComponents` function.
+
+```csharp
+var renderDesc = new RenderMeshDescription(
+    ballMesh,
+    ballMaterial,
+    shadowCastingMode: ShadowCastingMode.Off,
+    receiveShadows: false);
+RenderMeshUtility.AddComponents(entityPrefab, entityManager, renderDesc);
+```
+
+However, if all the entities will have the same render data we don't want to do this for every single entity.
+Instead, we can create one entity, set up the RenderMesh data and then use it as a prefab for creating other entities.
+It can be done like this:
+
+```csharp
+// Create temporary entity prefab, form which we will instantiate all other entities
+Entity entityPrefab = entityManager.CreateEntity(ballArchetype);
+
+// The hybrid renderer requires a set of components to render a mesh. Add these components, and set the mesh and material.
+var renderDesc = new RenderMeshDescription(
+    ballMesh,
+    ballMaterial,
+    shadowCastingMode: ShadowCastingMode.Off,
+    receiveShadows: false);
+RenderMeshUtility.AddComponents(entityPrefab, entityManager, renderDesc);
+
+// Instantiate entities.
+NativeArray<Entity> entities = new NativeArray<Entity>(ballCount, Allocator.TempJob);
+entityManager.Instantiate(entityPrefab, entities);
+```
+
+## The sample project
 
 The scene contains a "BallSpawner" script which is responsible for creating all the entities.
 
